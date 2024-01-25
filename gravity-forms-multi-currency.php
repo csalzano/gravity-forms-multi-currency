@@ -18,6 +18,8 @@ define( 'GF_MC_VERSION', '1.7.1' );
 define( 'GF_MC_MAINFILE', __FILE__ );
 
 add_action( 'init', array( 'GFMultiCurrency', 'init' ), 9 );
+// Register an add-on.
+add_action( 'gform_loaded', array( 'GFMultiCurrency', 'register_addon' ), 5 );
 
 /**
  * GFMultiCurrency
@@ -43,14 +45,56 @@ class GFMultiCurrency {
 
 		if ( is_admin() ) {
 			add_action( 'gform_admin_pre_render', array( &$this, 'admin_pre_render' ) );
-			add_filter( 'gform_form_settings', array( &$this, 'custom_form_settings' ) );
 			add_filter( 'gform_pre_form_settings_save', array( &$this, 'save_custom_form_settings' ) );
-			add_action( 'gform_editor_js', array( &$this, 'admin_editor_js' ) );
-
 			add_action( 'gform_entry_detail_content_before', array( &$this, 'admin_entry_detail' ) );
+
+			// Add our currency selector setting to each form.
+			add_filter( 'gform_form_settings_fields', array( $this, 'add_settings_field' ), 10, 2 );
 		} else {
 			add_filter( 'gform_pre_render', array( &$this, 'pre_render' ) );
 		}
+	}
+
+	/**
+	 * register_addon
+	 *
+	 * @return void
+	 */
+	public static function register_addon() {
+		// Registers the class name with GFAddOn.
+		require_once dirname( GF_MC_MAINFILE ) . '/gravity-forms-multi-currency-addon.php';
+		GFAddOn::register( 'Gravity_Forms_Multi_Currency_Addon' );
+	}
+
+	/**
+	 * Adds the Default Currency setting to each form.
+	 *
+	 * @see https://docs.gravityforms.com/gform_form_settings_fields/
+	 *
+	 * @param array $fields Form Settings fields.
+	 * @param array $form   The current form.
+	 *
+	 * @return array
+	 */
+	public function add_settings_field( $fields, $form = array() ) {
+		$field = array(
+			'name'          => 'gform_setting_currency',
+			'type'          => 'select',
+			'label'         => __( 'Currency', 'gravity-forms-multi-currency' ),
+			'tooltip'       => __( 'Change the currency for this form.', 'gravity-forms-multi-currency' ),
+			'default_value' => $this->gf_get_default_currency(),
+			'choices'       => array(),
+			'value'         => $form['currency'],
+		);
+
+		foreach ( RGCurrency::get_currencies() as $code => $currency ) {
+			$field['choices'][] = array(
+				'label' => sprintf( '%1$s (%2$s)', $currency['name'], $code ),
+				'value' => $code,
+			);
+		}
+		$fields['form_options']['fields'][] = $field;
+		return $fields;
 	}
 
 	/**
@@ -115,21 +159,6 @@ class GFMultiCurrency {
 	}
 
 	/**
-	 * Outputs the setting controls we add to each form.
-	 *
-	 * @param  array $settings Array of form settings.
-	 * @return array
-	 */
-	public function custom_form_settings( $settings ) {
-		ob_start();
-		include 'tpl/custom_form_settings.php';
-		$settings['Form Basics']['form_currency_setting'] = ob_get_contents();
-		ob_end_clean();
-
-		return $settings;
-	}
-
-	/**
 	 * Saves a currency code with a form meta array.
 	 *
 	 * @param  array $form Form meta array.
@@ -139,24 +168,6 @@ class GFMultiCurrency {
 		$form['currency'] = rgpost( 'form_currency' );
 
 		return $form;
-	}
-
-	/**
-	 * Outputs an inline script in the form editor to update our custom setting.
-	 *
-	 * @return void
-	 */
-	public function admin_editor_js() {
-		?>
-		<script type='text/javascript'>
-		jQuery(function($) {
-			$("#form_currency").change(function() {
-				form.currency = this.value;
-			});
-			$("#form_currency").val(form.currency);
-		});
-		</script>
-		<?php
 	}
 
 	/**
