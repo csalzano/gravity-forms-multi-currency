@@ -3,7 +3,7 @@
  * Plugin Name: Gravity Forms Multi Currency
  * Plugin URI: https://github.com/ilanco/gravity-forms-multi-currency
  * Description: Per form currency for Gravity Forms.
- * Version: 1.7.1
+ * Version: 1.8.0
  * Author: Ilan Cohen <ilanco@gmail.com>
  * Author URI: https://github.com/ilanco
  * Text Domain: gravity-forms-multi-currency
