@@ -178,26 +178,4 @@ class GFMultiCurrency {
 
 		return $currency;
 	}
-
-	/**
-	 * Stores a currency code and form ID pair.
-	 *
-	 * @param  int    $form_id Form ID.
-	 * @param  string $currency ISO currency code.
-	 * @return void
-	 */
-	private function set_currency( $form_id, $currency ) {
-		$this->currency[ $form_id ] = $currency;
-	}
-
-	/**
-	 * Retrieves a currency code provided the form ID.
-	 *
-	 * @param  int $form_id Form ID.
-	 * @return string
-	 */
-	private function get_currency( $form_id ) {
-		return $this->currency[ $form_id ];
-	}
 }
-
