@@ -121,14 +121,9 @@ class GFMultiCurrency {
 	public function form_process() {
 		$form_id = isset( $_POST['gform_submit'] ) ? $_POST['gform_submit'] : 0;
 		if ( $form_id ) {
-			$form_info     = GFAPI::get_form( $form_id );
-			$is_valid_form = $form_info && $form_info->is_active;
-
-			if ( $is_valid_form ) {
-				$form = GFAPI::get_form( $form_id );
-				if ( ! empty( $form['currency'] ) ) {
-					$this->currency = $form['currency'];
-				}
+			$form = GFAPI::get_form( $form_id );
+			if ( $form && $form['is_active'] && ! empty( $form['currency'] ) ) {
+				$this->currency = $form['currency'];
 			}
 		}
 	}
