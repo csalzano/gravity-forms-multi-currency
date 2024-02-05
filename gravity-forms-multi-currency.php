@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Gravity Forms Multi Currency
- * Plugin URI: https://github.com/ilanco/gravity-forms-multi-currency
- * Description: Per form currency for Gravity Forms.
+ * Plugin URI: https://github.com/csalzano/gravity-forms-multi-currency
+ * Description: Add-on for Gravity Forms. Adds a setting to each form that overrides the global currency setting.
  * Version: 1.8.1
- * Author: Ilan Cohen <ilanco@gmail.com>
- * Author URI: https://github.com/ilanco
+ * Author: Corey Salzano
+ * Author URI: https://breakfastco.xyz
  * Text Domain: gravity-forms-multi-currency
  *
  * @package gravity-forms-multi-currency
