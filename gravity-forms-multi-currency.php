@@ -124,7 +124,7 @@ class GFMultiCurrency {
 
 			if ( $is_valid_form ) {
 				$form = GFAPI::get_form( $form_id );
-				if ( isset( $form['currency'] ) && $form['currency'] ) {
+				if ( ! empty( $form['currency'] ) ) {
 					$this->currency = $form['currency'];
 				}
 			}
@@ -163,10 +163,9 @@ class GFMultiCurrency {
 	 * @return array
 	 */
 	public function pre_render( $form ) {
-		if ( isset( $form['currency'] ) && $form['currency'] ) {
+		if ( ! empty( $form['currency'] ) ) {
 			$this->currency = $form['currency'];
 		}
-
 		return $form;
 	}
 
