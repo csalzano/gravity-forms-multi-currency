@@ -44,14 +44,15 @@ class GFMultiCurrency {
 		add_filter( 'gform_currency', array( &$this, 'form_currency' ) );
 
 		if ( is_admin() ) {
-			add_action( 'gform_admin_pre_render', array( &$this, 'admin_pre_render' ) );
+			add_action( 'gform_admin_pre_render', array( &$this, 'pre_render' ) );
 			add_filter( 'gform_pre_form_settings_save', array( &$this, 'save_custom_form_settings' ) );
-			add_action( 'gform_entry_detail_content_before', array( &$this, 'admin_entry_detail' ) );
+			add_action( 'gform_entry_detail_content_before', array( &$this, 'pre_render' ) );
 
 			// Add our currency selector setting to each form.
 			add_filter( 'gform_form_settings_fields', array( $this, 'add_settings_field' ), 10, 2 );
 		} else {
 			add_filter( 'gform_pre_render', array( &$this, 'pre_render' ) );
+			add_action( 'gform_pre_enqueue_scripts', array( $this, 'pre_render' ) );
 		}
 	}
 
@@ -145,20 +146,6 @@ class GFMultiCurrency {
 	}
 
 	/**
-	 * Loads a form's currency setting into this class while in the dashboard.
-	 *
-	 * @param  array $form Form meta array.
-	 * @return array
-	 */
-	public function admin_pre_render( $form ) {
-		if ( isset( $form['currency'] ) && $form['currency'] ) {
-			$this->currency = $form['currency'];
-		}
-
-		return $form;
-	}
-
-	/**
 	 * Saves a currency code with a form meta array.
 	 *
 	 * @param  array $form Form meta array.
@@ -166,22 +153,6 @@ class GFMultiCurrency {
 	 */
 	public function save_custom_form_settings( $form ) {
 		$form['currency'] = rgpost( 'form_currency' );
-
-		return $form;
-	}
-
-	/**
-	 * Loads a form's currency setting into this class when an entry is viewed
-	 * in the dashboard.
-	 *
-	 * @param  array $form Form meta array.
-	 * @return array
-	 */
-	public function admin_entry_detail( $form ) {
-		if ( isset( $form['currency'] ) && $form['currency'] ) {
-			$this->currency = $form['currency'];
-		}
-
 		return $form;
 	}
 
