@@ -36,7 +36,9 @@ class GFMultiCurrency {
 	 * @return void
 	 */
 	private function __construct() {
-		if ( ! $this->is_gravityforms_supported() ) {
+		// Is Gravity Forms running?
+		if ( ! class_exists( 'GFAPI' ) ) {
+			// No.
 			return;
 		}
 
@@ -180,15 +182,6 @@ class GFMultiCurrency {
 		$currency = empty( $currency ) ? 'USD' : $currency;
 
 		return $currency;
-	}
-
-	/**
-	 * True or false, Gravity Forms is running.
-	 *
-	 * @return bool
-	 */
-	private function is_gravityforms_supported() {
-		return class_exists( 'GFCommon' );
 	}
 
 	/**
