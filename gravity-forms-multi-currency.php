@@ -79,7 +79,7 @@ class GFMultiCurrency {
 	 */
 	public function add_settings_field( $fields, $form = array() ) {
 		$field = array(
-			'name'          => 'gform_setting_currency',
+			'name'          => 'currency',
 			'type'          => 'select',
 			'label'         => __( 'Currency', 'gravity-forms-multi-currency' ),
 			'tooltip'       => __( 'Change the currency for this form.', 'gravity-forms-multi-currency' ),
@@ -152,7 +152,7 @@ class GFMultiCurrency {
 	 * @return array
 	 */
 	public function save_custom_form_settings( $form ) {
-		$form['currency'] = rgpost( 'form_currency' );
+		$form['currency'] = rgpost( '_gform_setting_currency' );
 		return $form;
 	}
 
